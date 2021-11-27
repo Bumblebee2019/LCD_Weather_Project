@@ -112,7 +112,7 @@ int main(void) {
 	LCD_init();
 	ADC_init();
 
-	char buffer[10]; 
+	char buffer[15]; 
 	int celsius; 
 //	celsius = (ADC_Read(0)*4.88);
  //  celsius = (celsius/10.00);
@@ -125,7 +125,8 @@ int main(void) {
     	sprintf(buffer, "Temperature: %d", celsius);  //%d means type int; %f means type double
    	 	LCD_DisplayString(1, buffer);
 		delay_ms(1000);
-//		memset(buffer,0,10);
+		memset(buffer,0,15);
+		LCD_DisplayString(1, buffer);
 	}
 }
 
