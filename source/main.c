@@ -2,7 +2,7 @@
 #include <avr/interrupt.h>
 #include <stdio.h>
 #include "io.h"
-//#include <LCD.h>
+#include <string.h>
 
 #define SET_BIT(p,i) ((p) |= (1 << (i)))
 #define CLR_BIT(p,i) ((p) &= ~(1 << (i)))
@@ -16,6 +16,16 @@
 #define E 7			// pin number of uC connected to pin 6 of LCD disp.
 
 					//FROM: https://atmels.wordpress.com/lcd-h/
+
+//------------------ADC Initialization from Lab 8------------------------/
+//void ADC_init() {
+  //  ADCSRA |= (1 << ADEN) | (1 << ADSC) | (1 << ADATE);
+    //ADEN: setting this bit enables analog to digital conversion
+    //ADSC: setting this bit starts the first conversion
+    //ADATE: seeting this bit enables auto-triggering. Since we are in Free Running Mode,
+    
+//}
+//-----------------------------------------------------------------------/
 void LCD_ClearScreen(void) {
    LCD_WriteCommand(0x01);
 }
@@ -79,7 +89,7 @@ void delay_ms(int miliSec) //for 8 Mhz crystal
   }
 }
 //--------------------------------------------CODE FOR LM35----------------------------------------------//
-void ADC_Init(){										
+void ADC_init(){										
 	DDRA = 0x00;	        /* Make ADC port as input */
 	ADCSRA = 0x87;          /* Enable ADC, with freq/128  */
 	ADMUX = 0x40;           /* Vref: Avcc, ADC channel: 0 */
@@ -100,13 +110,22 @@ int main(void) {
 	DDRD = 0xFF;	PORTD = 0x00;
 
 	LCD_init();
+	ADC_init();
+
 	char buffer[10]; 
-	int f = 10; 
-	sprintf(buffer, "Temperature: %d", f);	//%d means type int; %f means type double	
-	
-	LCD_DisplayString(1, buffer);
+	int celsius; 
+//	celsius = (ADC_Read(0)*4.88);
+ //  celsius = (celsius/10.00);
+//	sprintf(buffer, "Temperature: %d", celsius);  //%d means type int; %f means type double
+//   LCD_DisplayString(1, buffer);  
 
 	while(1) {
+		celsius = (ADC_Read(0)*4.88);
+    	celsius = (celsius/10.00);
+    	sprintf(buffer, "Temperature: %d", celsius);  //%d means type int; %f means type double
+   	 	LCD_DisplayString(1, buffer);
+		delay_ms(1000);
+//		memset(buffer,0,10);
 	}
 }
 
