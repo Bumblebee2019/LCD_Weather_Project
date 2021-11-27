@@ -2,6 +2,7 @@
 #include <avr/interrupt.h>
 #include <stdio.h>
 #include "io.h"
+//#include <LCD.h>
 
 #define SET_BIT(p,i) ((p) |= (1 << (i)))
 #define CLR_BIT(p,i) ((p) &= ~(1 << (i)))
@@ -14,8 +15,7 @@
 #define RS 6			// pin number of uC connected to pin 4 of LCD disp.
 #define E 7			// pin number of uC connected to pin 6 of LCD disp.
 
-/*-------------------------------------------------------------------------*/
-
+					//FROM: https://atmels.wordpress.com/lcd-h/
 void LCD_ClearScreen(void) {
    LCD_WriteCommand(0x01);
 }
@@ -78,14 +78,67 @@ void delay_ms(int miliSec) //for 8 Mhz crystal
    asm("nop");
   }
 }
+//--------------------------------------------CODE FOR LM35----------------------------------------------//
+void ADC_Init(){										
+	DDRA = 0x00;	        /* Make ADC port as input */
+	ADCSRA = 0x87;          /* Enable ADC, with freq/128  */
+	ADMUX = 0x40;           /* Vref: Avcc, ADC channel: 0 */
+}
 
+int ADC_Read(char channel)							
+{
+	ADMUX = 0x40 | (channel & 0x07);   /* set input channel to read */
+	ADCSRA |= (1<<ADSC);               /* Start ADC conversion */
+	while (!(ADCSRA & (1<<ADIF)));     /* Wait until end of conversion by polling ADC interrupt flag */
+	ADCSRA |= (1<<ADIF);               /* Clear interrupt flag */
+	delay_ms(1);                      /* Wait a little bit */
+	return ADCW;                       /* Return ADC word */
+}
+//-------------------------------------------------------------------------------------------------------//
 int main(void) {
 	DDRC = 0xFF;	PORTC = 0x00;
 	DDRD = 0xFF;	PORTD = 0x00;
 
 	LCD_init();
-	LCD_DisplayString(1, "Hello World");
+	char buffer[10]; 
+	int f = 10; 
+	sprintf(buffer, "Temperature: %d", f);	//%d means type int; %f means type double	
+	
+	LCD_DisplayString(1, buffer);
 
-	while(1) {continue;}
+	while(1) {
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
