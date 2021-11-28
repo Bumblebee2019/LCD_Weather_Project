@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include "io.h"
 #include <string.h>
+#include <avr/eeprom.h>
+#include "LCD.h"
 
 #define SET_BIT(p,i) ((p) |= (1 << (i)))
 #define CLR_BIT(p,i) ((p) &= ~(1 << (i)))
@@ -114,19 +116,41 @@ int main(void) {
 
 	char buffer[15]; 
 	int celsius; 
-//	celsius = (ADC_Read(0)*4.88);
- //  celsius = (celsius/10.00);
-//	sprintf(buffer, "Temperature: %d", celsius);  //%d means type int; %f means type double
-//   LCD_DisplayString(1, buffer);  
+	int counter = 0;
 
 	while(1) {
 		celsius = (ADC_Read(0)*4.88);
     	celsius = (celsius/10.00);
-    	sprintf(buffer, "Temperature: %d", celsius);  //%d means type int; %f means type double
-   	 	LCD_DisplayString(1, buffer);
-		delay_ms(1000);
-		memset(buffer,0,15);
-		LCD_DisplayString(1, buffer);
+
+		if(counter < 3) {
+    		sprintf(buffer, "Temperature: %d", celsius);  //%d means type int; %f means type double
+  	 		LCD_DisplayString(1, buffer);
+ 			delay_ms(1000);
+			memset(buffer,0,15);
+			LCD_DisplayString(1, buffer);
+		}
+		else if (counter < 7) {
+			if (celsius < 21) {
+				 sprintf(buffer, "Icon: %c", '*');  //%c means single character
+     	         LCD_DisplayString(1, buffer);
+            	 delay_ms(1000);
+            	 memset(buffer,0,15);
+            	 LCD_DisplayString(1, buffer);
+			}
+			else if (celsius > 21) {
+				 sprintf(buffer, "Icon: %c", '+');  //%c means single character
+            	 LCD_DisplayString(1, buffer);
+            	 delay_ms(1000);
+            	 memset(buffer,0,15);
+            	 LCD_DisplayString(1, buffer);
+			}
+	
+		}
+		++counter;
+		if (counter>7) {
+			counter = 0;
+		}
+		
 	}
 }
 
