@@ -1,5 +1,9 @@
 //Name: Daria
-
+/*Sources I used:
+	* https://www.electronicwings.com/avr-atmega/lm35-temperature-sensor-interfacing-with-atmega1632	//for LM35 and AVR interfacing and ADC initialization
+	* https://www.electronicwings.com/avr-atmega/atmega16-eeprom										//for EEPROM and atmega interfacing
+	* https://maxembedded.com/2011/06/lcd-interfacing-with-avr/											//for displaying variables of type 'int' on the LCD screen
+*/
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdio.h>
@@ -19,17 +23,7 @@
 #define RS 6			// pin number of uC connected to pin 4 of LCD disp.
 #define E 7			// pin number of uC connected to pin 6 of LCD disp.
 
-					//FROM: https://atmels.wordpress.com/lcd-h/
 
-//------------------ADC Initialization from Lab 8------------------------/
-//void ADC_init() {
-  //  ADCSRA |= (1 << ADEN) | (1 << ADSC) | (1 << ADATE);
-    //ADEN: setting this bit enables analog to digital conversion
-    //ADSC: setting this bit starts the first conversion
-    //ADATE: seeting this bit enables auto-triggering. Since we are in Free Running Mode,
-    
-//}
-//-----------------------------------------------------------------------/
 void LCD_ClearScreen(void) {
    LCD_WriteCommand(0x01);
 }
@@ -99,9 +93,9 @@ void ADC_init(){
 	ADMUX = 0x40;           /* Vref: Avcc, ADC channel: 0 */
 }
 
-int ADC_Read(char channel)							
+int ADC_read(char data)							
 {
-	ADMUX = 0x40 | (channel & 0x07);   /* set input channel to read */
+	ADMUX = 0x40 | (data & 0x07);   /* set input channel to read */
 	ADCSRA |= (1<<ADSC);               /* Start ADC conversion */
 	while (!(ADCSRA & (1<<ADIF)));     /* Wait until end of conversion by polling ADC interrupt flag */
 	ADCSRA |= (1<<ADIF);               /* Clear interrupt flag */
@@ -119,10 +113,30 @@ int main(void) {
 	char buffer[15]; 
 	int celsius; 
 	int counter = 0;
+	int current_temp = 0;
+	int min_temp = 0;
+	int max_temp = 0;
 
+	//First measurement is outside the while(1) because we want to initially set min = max = current
+	celsius = (ADC_read(0)*4.88);
+    celsius = (celsius/10.00);
+	current_temp = celsius;
+	min_temp = current_temp;
+	max_temp = current_temp;
+	
 	while(1) {
-		celsius = (ADC_Read(0)*4.88);
+		celsius = (ADC_read(0)*4.88);
     	celsius = (celsius/10.00);
+		current_temp = celsius;
+		//If curr_temp > max_temp, then write the new max to EEPROM
+		if(current_temp > max_temp) {
+			float new_max = (float) current_temp;
+			eeprom_write_float ((float*) 0, new_max);
+		}
+		if(current_temp < min_temp) {
+			float new_min = (float) current_temp;
+			eeprom_write_float ((float*) 20, new_min);
+		}
 
 		if(counter < 3) {
     		sprintf(buffer, "Temperature: %d", celsius);  //%d means type int; %f means type double
