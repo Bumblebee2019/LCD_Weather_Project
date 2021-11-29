@@ -106,6 +106,7 @@ int ADC_read(char data)
 int main(void) {
 	DDRC = 0xFF;	PORTC = 0x00;
 	DDRD = 0xFF;	PORTD = 0x00;
+	DDRB = 0x00;	PORTB = 0xFF;
 
 	LCD_init();
 	ADC_init();
@@ -123,21 +124,72 @@ int main(void) {
 	current_temp = celsius;
 	min_temp = current_temp;
 	max_temp = current_temp;
-	
+	eeprom_write_float ((float*) 0, (float)max_temp);
+	eeprom_write_float ((float*) 0, (float)min_temp);
+
+
+//========================Working for displying min and max======================
+/*	while(1){
+		celsius = (ADC_read(0)*4.88);
+        celsius = (celsius/10.00);
+        current_temp = celsius;
+        //If curr_temp > max_temp, then write the new max to EEPROM
+        if(current_temp > max_temp) {
+            float new_max = (float) current_temp;
+            eeprom_write_float ((float*) 0, new_max);
+			float max_display_d = eeprom_read_float(( float *) 0);
+			int max_display = (int)max_display_d;
+			sprintf(buffer, "Max temp: %d", max_display); 
+			LCD_DisplayString(1, buffer);
+			delay_ms(1000);
+        }
+
+        if(current_temp < min_temp) {
+            float new_min = (float) current_temp;
+            eeprom_write_float ((float*) 20, new_min);
+			float min_display_d = eeprom_read_float((float *) 20);
+			int min_display = (int)min_display_d;
+			sprintf(buffer, "Min temp: %d", min_display);
+			LCD_DisplayString(1, buffer);
+			delay_ms(1000);
+        }
+		
+	}*/
+//==================================================================================
+	unsigned char button = 0x00;
+	int local_count = 6;
+	char min_buffer[15];
+	char max_buffer[15];
 	while(1) {
+		button = ~PINB & 0x01;
 		celsius = (ADC_read(0)*4.88);
     	celsius = (celsius/10.00);
 		current_temp = celsius;
-		//If curr_temp > max_temp, then write the new max to EEPROM
+		
+		if (button) {
+              	 float max_display_d = eeprom_read_float(( float *) 0);
+                int max_display = (int)max_display_d;
+                sprintf(max_buffer, "Max temp: %d", max_display); 
+                LCD_DisplayString(1, max_buffer);
+                delay_ms(1000);
+        }   		
 		if(current_temp > max_temp) {
-			float new_max = (float) current_temp;
-			eeprom_write_float ((float*) 0, new_max);
+			max_temp = current_temp;
+			eeprom_write_float ((float*) 0, (float)max_temp);
 		}
+/*
 		if(current_temp < min_temp) {
 			float new_min = (float) current_temp;
 			eeprom_write_float ((float*) 20, new_min);
-		}
-
+			if (button == 0x02) {
+				float min_display_d = eeprom_read_float((float *) 20);
+	            int min_display = (int)min_display_d;
+    	        sprintf(min_buffer, "Min temp: %d", min_display);
+        	    LCD_DisplayString(1, min_buffer);
+            	delay_ms(1000);
+			}
+		}*/
+		
 		if(counter < 3) {
     		sprintf(buffer, "Temperature: %d", celsius);  //%d means type int; %f means type double
   	 		LCD_DisplayString(1, buffer);
