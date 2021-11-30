@@ -102,6 +102,10 @@ int ADC_read(char data)
 	delay_ms(1);                      /* Wait a little bit */
 	return ADCW;                       /* Return ADC word */
 }
+
+float faren(float celsius) {
+	return 1.8 * celsius + 32;
+}
 //-------------------------------------------------------------------------------------------------------//
 int main(void) {
 	DDRC = 0xFF;	PORTC = 0x00;
@@ -125,73 +129,66 @@ int main(void) {
 	min_temp = current_temp;
 	max_temp = current_temp;
 	eeprom_write_float ((float*) 0, (float)max_temp);
-	eeprom_write_float ((float*) 0, (float)min_temp);
+	eeprom_write_float ((float*) 20, (float)min_temp);
 
 
-//========================Working for displying min and max======================
-/*	while(1){
-		celsius = (ADC_read(0)*4.88);
-        celsius = (celsius/10.00);
-        current_temp = celsius;
-        //If curr_temp > max_temp, then write the new max to EEPROM
-        if(current_temp > max_temp) {
-            float new_max = (float) current_temp;
-            eeprom_write_float ((float*) 0, new_max);
-			float max_display_d = eeprom_read_float(( float *) 0);
-			int max_display = (int)max_display_d;
-			sprintf(buffer, "Max temp: %d", max_display); 
-			LCD_DisplayString(1, buffer);
-			delay_ms(1000);
-        }
-
-        if(current_temp < min_temp) {
-            float new_min = (float) current_temp;
-            eeprom_write_float ((float*) 20, new_min);
-			float min_display_d = eeprom_read_float((float *) 20);
-			int min_display = (int)min_display_d;
-			sprintf(buffer, "Min temp: %d", min_display);
-			LCD_DisplayString(1, buffer);
-			delay_ms(1000);
-        }
-		
-	}*/
-//==================================================================================
 	unsigned char button = 0x00;
-	int local_count = 6;
+	unsigned char button_switch = 0x00;
 	char min_buffer[15];
 	char max_buffer[15];
+	unsigned char temperature_name = 'C';
 	while(1) {
-		button = ~PINB & 0x01;
+		button = ~PINB & 0x01;	//min/max button
+		button_switch = ~PINB & 0x02;	//F to C button and vice versa 
+
 		celsius = (ADC_read(0)*4.88);
     	celsius = (celsius/10.00);
 		current_temp = celsius;
+		if (temperature_name == 'F') {
+			current_temp = (int)faren((float)celsius);
+		}
+		
+		
+		if (button_switch) {
+			if(temperature_name == 'C'){
+			    temperature_name = 'F';
+			}else{
+				temperature_name = 'C';
+			}
+		}
 		
 		if (button) {
-              	 float max_display_d = eeprom_read_float(( float *) 0);
+              	float max_display_d = eeprom_read_float(( float *) 0);
+				if (temperature_name == 'F') {
+					max_display_d = faren(max_display_d);
+				}
                 int max_display = (int)max_display_d;
-                sprintf(max_buffer, "Max temp: %d", max_display); 
+                sprintf(max_buffer, "Max temp: %d %c", max_display, temperature_name); 
                 LCD_DisplayString(1, max_buffer);
                 delay_ms(1000);
+				
+				//For min:
+				float min_display_d = eeprom_read_float((float *) 20);
+				if (temperature_name == 'F') {
+					min_display_d = faren(min_display_d);
+				}
+                int min_display = (int)min_display_d;
+                sprintf(min_buffer, "Min temp: %d %c", min_display, temperature_name);
+                LCD_DisplayString(1, min_buffer);
+                delay_ms(1000);
+	
         }   		
-		if(current_temp > max_temp) {
-			max_temp = current_temp;
+		if(celsius > max_temp) {
+			max_temp = celsius;
 			eeprom_write_float ((float*) 0, (float)max_temp);
 		}
-/*
-		if(current_temp < min_temp) {
-			float new_min = (float) current_temp;
-			eeprom_write_float ((float*) 20, new_min);
-			if (button == 0x02) {
-				float min_display_d = eeprom_read_float((float *) 20);
-	            int min_display = (int)min_display_d;
-    	        sprintf(min_buffer, "Min temp: %d", min_display);
-        	    LCD_DisplayString(1, min_buffer);
-            	delay_ms(1000);
-			}
-		}*/
+		if(celsius < min_temp) {
+			min_temp = celsius;
+			eeprom_write_float((float*) 20, (float)min_temp);
+		}	
 		
 		if(counter < 3) {
-    		sprintf(buffer, "Temperature: %d", celsius);  //%d means type int; %f means type double
+    		sprintf(buffer, "Temp: %d %c", current_temp, temperature_name);  //%d means type int; %f means type double
   	 		LCD_DisplayString(1, buffer);
  			delay_ms(1000);
 			memset(buffer,0,15);
@@ -205,7 +202,7 @@ int main(void) {
             	 memset(buffer,0,15);
             	 LCD_DisplayString(1, buffer);
 			}
-			else if (celsius > 21) {
+			else if (celsius >= 21) {
 				 sprintf(buffer, "Icon: %c", '+');  //%c means single character
             	 LCD_DisplayString(1, buffer);
             	 delay_ms(1000);
