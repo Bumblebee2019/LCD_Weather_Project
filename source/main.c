@@ -8,6 +8,7 @@
 #include <avr/interrupt.h>
 #include <stdio.h>
 #include "io.h"
+#include "usart.h"
 #include <string.h>
 #include <avr/eeprom.h>
 #include "LCD.h"
@@ -106,10 +107,15 @@ int ADC_read(char data)
 float faren(float celsius) {
 	return 1.8 * celsius + 32;
 }
+
+void degree_display() {
+	char degree  = 0xDF;
+	LCD_WriteData(degree);
+}
 //-------------------------------------------------------------------------------------------------------//
 int main(void) {
 	DDRC = 0xFF;	PORTC = 0x00;
-	DDRD = 0xFF;	PORTD = 0x00;
+	DDRD = 0xF0;	PORTD = 0x0F;	//upper bits (7-4) are outputs to accomodate LCD; lower bits (3-0) are inputs for USART;
 	DDRB = 0x00;	PORTB = 0xFF;
 
 	LCD_init();
@@ -165,6 +171,7 @@ int main(void) {
                 int max_display = (int)max_display_d;
                 sprintf(max_buffer, "Max temp: %d %c", max_display, temperature_name); 
                 LCD_DisplayString(1, max_buffer);
+				degree_display();
                 delay_ms(1000);
 				
 				//For min:
@@ -175,6 +182,7 @@ int main(void) {
                 int min_display = (int)min_display_d;
                 sprintf(min_buffer, "Min temp: %d %c", min_display, temperature_name);
                 LCD_DisplayString(1, min_buffer);
+				degree_display();
                 delay_ms(1000);
 	
         }   		
@@ -190,6 +198,7 @@ int main(void) {
 		if(counter < 3) {
     		sprintf(buffer, "Temp: %d %c", current_temp, temperature_name);  //%d means type int; %f means type double
   	 		LCD_DisplayString(1, buffer);
+			degree_display();
  			delay_ms(1000);
 			memset(buffer,0,15);
 			LCD_DisplayString(1, buffer);
