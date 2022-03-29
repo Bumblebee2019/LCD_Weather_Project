@@ -46,4 +46,10 @@ Celsius and button control are also included in this file.
     * https://www.electronicwings.com/avr-atmega/atmega16-eeprom
     * https://maxembedded.com/2011/06/lcd-interfacing-with-avr/
     * https://www.handsonembedded.com/lcd16x2-hd44780-tutorial-5/  
-   
+
+* File transmit_usart.c This file is responsible for implementing the functionality of the
+microcontroller that plays the role of a transmitter in the USART.
+  * Outside Sources:
+     * https://www.youtube.com/watch?v=dMGRW48Uvxw
+     * https://maxembedded.com/2013/09/the-usart-of-the-avr/
+     * https://ww1.microchip.com/downloads/en/DeviceDoc/doc8059.pdf
