@@ -53,3 +53,13 @@ microcontroller that plays the role of a transmitter in the USART.
      * https://www.youtube.com/watch?v=dMGRW48Uvxw
      * https://maxembedded.com/2013/09/the-usart-of-the-avr/
      * https://ww1.microchip.com/downloads/en/DeviceDoc/doc8059.pdf
+
+* File receive_usart.c This file contains the code for the receiver microcontroller in the
+USART.
+  * Outside sources are the same as for the transmit_usart.c
+* io.h contains the declarations of the LCD functions as well as other unique functions used
+in the lcd_display_temp.c
+* transmit_usart.h contains function declarations for the transmit_usart.c
+  * Outside sources are the same as for the transmit_usart.c
+* receive_usart.h contains function declarations for the receive_usart.c
+  * Outside sources are the same as for the transmit_usart.c
