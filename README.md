@@ -27,3 +27,14 @@ view the highest and lowest temperature, press the first of the two buttons and 
 minimum temperatures will be displayed on the LCD screen. To turn off the board, remove the
 USB wire from the power source.
 
+### Controls:
+To turn the board on, connect the USB cable to a power source. To control the scale in which the
+temperature is, press the lowest of the two buttons, and the temperature will switch between
+Celsius and Fahrenheit. The upper button controls the display of data from the EEPROM, which
+is the minimum and maximum temperature.
+
+### Special Considerations
+For the project to work, the only need is power supply. LM35 nor EEPROM have no special
+conditions or setup to be activated.
+
+
