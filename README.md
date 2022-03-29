@@ -64,4 +64,4 @@ in the lcd_display_temp.c
 * receive_usart.h contains function declarations for the receive_usart.c
   * Outside sources are the same as for the transmit_usart.c
 
-![ATMEGA 1284](https://www.bing.com/images/search?view=detailV2&ccid=u63zy%2fIh&id=02F1EA2FB781231EDEC3E05940CE4F26A4B75036&thid=OIP.u63zy_Ih9kGxakr3KNdm-AHaFj&mediaurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.bbadf3cbf221f641b16a4af728d766f8%3frik%3dNlC3pCZPzkBZ4A%26riu%3dhttp%253a%252f%252fd1gsvnjtkwr6dd.cloudfront.net%252flarge%252fIC-ATMEGA1284-PU_02_LRG.jpg%26ehk%3d9pBML5bjj2PhBow8svcU6bQMyJ1%252f04zGaPsIt7RVQvM%253d%26risl%3d%26pid%3dImgRaw%26r%3d0&exph=768&expw=1024&q=atmega+1284+diagram&simid=608034397199693557&FORM=IRPRST&ck=00C1EA538933D53E4E66DE506E45DD23&selectedIndex=7&ajaxhist=0&ajaxserp=0)
+![ATMEGA 1284](https://dojft4652t1in.cloudfront.net/wp-content/uploads/IC-ATMEGA1284-PU-3.jpg)
