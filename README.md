@@ -67,3 +67,4 @@ in the lcd_display_temp.c
 ## Component Visualization
 ![ATMEGA 1284](https://dojft4652t1in.cloudfront.net/wp-content/uploads/IC-ATMEGA1284-PU-3.jpg)
 ![LCD](https://avrgeeks.com/wp-content/uploads/2017/09/Arduino-LCD-Set-Up-and-Programming-Guide-LCD-Pinout.png)
+![LM35] (https://www.engineersgarage.com/wp-content/uploads/2019/10/lm35-pin-out_orig-1.png)
