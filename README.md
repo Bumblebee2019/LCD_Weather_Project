@@ -16,3 +16,14 @@ lowest temperatures, both of which are saved to EEPROM, by pressing the second b
 course, all the temperatures ever displayed on the LCD have a special character degree symbol in
 front of them.
 
+## User Guide
+### Rules:
+To turn on the temperature display project, connect the board to power through the USB cable.
+Then, notice that on the LCD, a temperature is displayed in Celsius, because this is the default
+unit. If viewing temperature in Celsius is inconvenient, press the lowest of the two black buttons
+and the temperature will become converted to Fahrenheit and displayed. If the temperature is
+below 21C, a symbol next to an “Icon” display will be a snowflake, and a plus if above 21C. To
+view the highest and lowest temperature, press the first of the two buttons and the maximum and
+minimum temperatures will be displayed on the LCD screen. To turn off the board, remove the
+USB wire from the power source.
+
