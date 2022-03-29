@@ -64,4 +64,6 @@ in the lcd_display_temp.c
 * receive_usart.h contains function declarations for the receive_usart.c
   * Outside sources are the same as for the transmit_usart.c
 
+## Component Visualization
 ![ATMEGA 1284](https://dojft4652t1in.cloudfront.net/wp-content/uploads/IC-ATMEGA1284-PU-3.jpg)
+![LCD](https://avrgeeks.com/wp-content/uploads/2017/09/Arduino-LCD-Set-Up-and-Programming-Guide-LCD-Pinout.png)
