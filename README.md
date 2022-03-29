@@ -41,4 +41,9 @@ conditions or setup to be activated.
 * File lcd_display_temp.c this file includes all the functionality for displaying current
 temperature, minimum, and maximum temperature. Switching between Fahrenheit and
 Celsius and button control are also included in this file.
-  * Hello
+  * Outside Sources:
+    * https://www.electronicwings.com/avr-atmega/lm35-temperature-sensor-interfacing-with-atmega1632
+    * https://www.electronicwings.com/avr-atmega/atmega16-eeprom
+    * https://maxembedded.com/2011/06/lcd-interfacing-with-avr/
+    * https://www.handsonembedded.com/lcd16x2-hd44780-tutorial-5/  
+   
