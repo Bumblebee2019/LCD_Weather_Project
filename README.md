@@ -37,4 +37,8 @@ is the minimum and maximum temperature.
 For the project to work, the only need is power supply. LM35 nor EEPROM have no special
 conditions or setup to be activated.
 
-
+## Source File Description:
+* File lcd_display_temp.c this file includes all the functionality for displaying current
+temperature, minimum, and maximum temperature. Switching between Fahrenheit and
+Celsius and button control are also included in this file.
+  * Hello
